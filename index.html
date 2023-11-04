@@ -598,10 +598,12 @@
                 required></textarea>
             </div>
             <div class="text-center my-3">
-              <button type="submit">Enviar mensaje</button>
-              <input type="hidden" name="_next" value="http://127.0.0.1:5500/gracias.html">
-              <input type="hidden" name="_subject" value="Correo desde el portafolio web">
-            </div>
+              <form action="gracias.html" method="POST">
+                <div class="text-center my-3">
+                  <button type="submit">Enviar mensaje</button>
+                  <input type="hidden" name="_subject" value="Correo desde el portafolio web">
+                </div>
+              </form>
           </form>
 
         </div>
