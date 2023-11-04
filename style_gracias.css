@@ -1,0 +1,195 @@
+
+
+/* ********** Variables Css/Custom Properties ********** */
+:root{
+  --primary: rgb(100, 161, 157);
+  --secondary: rgb(77, 182, 172);
+  --tertiary: rgba(20, 195, 178, 0.067);
+  --fourt: rgba(20, 195, 178, 0.172);
+  --first: rgba(228, 215, 215, 0.5);
+
+  --btn-primary:rgb(34, 125, 119);
+  --btn-secondary:rgb(23, 111, 106);
+  
+  --bg-color: rgba(108, 119, 118, 0.8);
+  --bg-color-secondary: rgba(34, 125, 119, 0.313);
+
+  --bs-white: #fff;
+  --bs-gray: #414455;
+  --bs-gray-dark: #252734;
+  --bs-light: #f5f7f9d3;
+  --bs-dark: #1d1e29;
+  
+}  
+
+  /* ********** Reset Styles de css ********** */
+  body {
+    font-family: "Raleway", sans-serif;  
+    /* Ajustar el tipo de letra */
+  }
+   footer a {
+    color: var(--secondary);
+    transition: all 0.3s ease-out;
+  }
+  footer a:hover {
+    color: var(--btn-secondary);
+    }
+ 
+  /* ********** Bootstrap Styles ********** */
+  .nav-item{
+    padding-left: 1rem;
+    transition: all 0.3s ease-out;
+  }
+  .nav-item:hover{
+    background-color: var(--tertiary);
+  }
+  .nav-link {
+    color: var(--bs-light);
+    font-size: 1rem;
+   }
+  .nav-link:hover {
+    /* color al poner el cursor sobre el texto */
+    color: var(--secondary);
+  }
+  .navbar-nav .nav-link.active {
+    color: var(--bs-light);
+  }
+  .navbar-nav .nav-link.active:hover {
+    color: var(--secondary);
+  }
+  .navbar-toggler {
+    font-size: 85%;
+    font-weight: bold;
+    padding: 0.75rem;
+    color: var(--bs-light);
+    border: none;
+    border-top: 1px solid rgba(228, 215, 215, 0.5);
+    border-bottom: 1px solid rgba(228, 215, 215, 0.5);;
+    box-shadow: none;
+  }
+  .navbar-toggler:hover {
+    color: var(--bs-light);
+    box-shadow: none;
+  }
+  .navbar-toggler:focus {
+    box-shadow: none;
+  }
+  /* ********** My Styles ********** */
+
+  .bg-hero-image{
+    background-image: var(--bg-image);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  .bg-color{
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%);
+  }
+  #inicio h1 {
+    font-weight: bold;
+    line-height: 3rem;
+    letter-spacing: 0.2rem;
+    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+            background-clip: text;
+  }
+  #mainNav {
+  transition: background-color 0.1s ease-in-out;
+  /* --bs-navbar-toggler-focus-width: 0.1rem; */
+  }
+  #mainNav.navbar-shrink {
+    background-color: rgba(25, 27, 34, 0.938);
+  }
+  #mainNav .navbar-brand {
+    color:var(--primary);
+    padding: 1rem;
+  }
+  #mainNav.navbar-shrink .navbar-brand {
+    color: var(--bs-light);
+  }
+  #mainNav.navbar-shrink .navbar-toggler {
+    color: var(--primary);
+    box-shadow: none;
+  }
+  #mainNav.navbar-shrink .navbar-toggler:hover {
+    color: var(--bs-light);
+    box-shadow: none;
+  }
+  #mainNav.navbar-shrink .nav-link {
+    color: var(--secondary);
+  }
+  #mainNav.navbar-shrink .nav-link:hover {
+    color: var(--bs-light);
+  }
+  #inicio .btn-scrollto-down {
+    position: absolute;
+    font-size: 50px;
+    transition: 0.5s;
+    color: var(--fourt);
+    -webkit-animation: bi 1.5s infinite;
+    animation: bi 1.5s infinite;
+  }
+  #inicio .btn-scrollto-down:hover {
+    padding-top: 10px;
+    color: var(--primary);
+  }
+  @-webkit-keyframes bi {
+    0% {
+      -webkit-transform: translate(0, 0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      -webkit-transform: translate(-2px, 30px);
+      opacity: 0;
+    }
+  }
+  @keyframes bi {
+    0% {
+      transform: translate(0, 0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-2px, 30px);
+      opacity: 0;
+    }
+  }
+
+
+
+
+/* // X-Small devices (portrait phones, less than 576px)
+// No media query for `xs` since this is the default in Bootstrap
+
+// Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) { 
+ 
+}
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+  .nav-item:hover{
+    background-color: transparent;
+  }  
+ }
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+ 
+ }
+
+/* // X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+
+ }
+
+/* // XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) { 
+
+ }
