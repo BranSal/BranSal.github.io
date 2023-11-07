@@ -326,9 +326,9 @@
     background: var(--secondary);
     margin: 4px 10px;
   }
-  /* .section-bg {
+  .section-bg {
     background: linear-gradient(180deg, var(--tertiary) 0%,var(--primary)  100%);
-  } */
+  }
 /*--------------------------------------------------------------
 # About
 --------------------------------------------------------------*/
