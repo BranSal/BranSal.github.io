@@ -1,138 +1,178 @@
-// Hacer que el usuario pierda con muchos movimientos
-// Inicialización de variables
-let tarjetasVolteadas = 0;
-let tarjeta1 = null;
-let tarjeta2 = null;
-let primerResultado = null;
-let segundoResultado = null;
-let movimientos = 0;
-let aciertos = 0;
-let temporizador = false;
-let tiempoInicial = 60;
-let tiempo = 60;
-let tiempoRegresivoId = null;
+const moves = document.getElementById("moves-count");
+const timeValue = document.getElementById("time");
+const startButton = document.getElementById("start");
+const stopButton = document.getElementById("stop");
+const gameContainer = document.querySelector(".game-container");
+const result = document.getElementById("result");
+const controls = document.querySelector(".controls-container");
+let cards;
+let interval;
+let firstCard = false;
+let secondCard = false;
 
-// Sonidos
-let clickAudio = new Audio("./sounds/click.wav");
-let loseAudio = new Audio("./sounds/lose.wav");
-let rightAudio = new Audio("./sounds/right.wav");
-let winAudio = new Audio("./sounds/win.wav");
-let wrongAudio = new Audio("./sounds/wrong.wav");
+//Items array
+const items = [
+  { name: "virgo", image: "imgs/virgo.svg" },
+  { name: "tauro", image: "imgs/tauro.svg" },
+  { name: "sagitario", image: "imgs/sagitario.svg" },
+  { name: "piscis", image: "imgs/piscis.svg" },
+  { name: "libra", image: "imgs/libra.svg" },
+  { name: "leo", image: "imgs/leo.svg" },
+  { name: "geminis", image: "imgs/geminis.svg" },
+  { name: "escorpio", image: "imgs/escorpio.svg" },
+  { name: "capricornio", image: "imgs/capricornio.svg" },
+  { name: "cancer", image: "imgs/cancer.svg" },
+  { name: "aries", image: "imgs/aries.svg" },
+  { name: "acuario", image: "imgs/acuario.svg" },
+];
 
-// DOM
-let movimientosEl = document.getElementById("movimientos");
-let aciertosEl = document.getElementById("aciertos");
-let tiempoEl = document.getElementById("tiempoRestante");
-let replayEl = document.getElementById("jugarDeNuevo");
-let infoEl = document.querySelector("#comoJugar");
 
-// Generación de números aleatorios
-let numbers = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
+//Initial Time
+let seconds = 0,
+  minutes = 0;
+//Initial moves and win count
+let movesCount = 0,
+  winCount = 0;
 
-numbers.sort(() => {
-    return Math.random() - 0.5;
-});
-console.log(numbers);
+//For timer
+const timeGenerator = () => {
+  seconds += 1;
+  //minutes logic
+  if (seconds >= 60) {
+    minutes += 1;
+    seconds = 0;
+  }
+  //format time before displaying
+  let secondsValue = seconds < 10 ? `0${seconds}` : seconds;
+  let minutesValue = minutes < 10 ? `0${minutes}` : minutes;
+  timeValue.innerHTML = `<span>Time:</span>${minutesValue}:${secondsValue}`;
+};
 
-// Eventos
-infoEl.addEventListener("click", comoJugar);
+//For calculating moves
+const movesCounter = () => {
+  movesCount += 1;
+  moves.innerHTML = `<span>Moves:</span>${movesCount}`;
+};
 
-// Funciones
-function contarTiempo() {
-    tiempoRegresivoId = setInterval(() => {
-        tiempo--;
-        tiempoEl.innerHTML = tiempo + " segundos";
-        if (tiempo == 0) {
-            clearInterval(tiempoRegresivoId);
-            gameOver(numbers);
-            loseAudio.play();
-        }
-    }, 1000);
-}
-function gameOver(numbers) {
-    for (let i = 0; i <= 15; i++) {
-        let tarjetaBloqueada = document.getElementById(i);
-        tarjetaBloqueada.innerHTML = `<img src="imgs/${numbers[i]}.png">`;
-        tarjetaBloqueada.classList.add("disabled");
-    }
-    Swal.fire({
-        icon: "error",
-        title: "Perdiste...",
-        text: "Inténtalo de nuevo!",
-    });
-    replayEl.classList.remove("hidden");
-}
-function comoJugar() {
-    Swal.fire({
-        icon: "info",
-        title: "¿Cómo jugar?",
-        text: "Habrán una serie de parejas de cartas boca abajo. Deberás voltear sucesivamente dos cartas, memorizando la ubicación de las mismas. Cuando se encuentren dos cartas idénticas que formen pareja, se sumará un punto. La partida terminará cuando estén todas las parejas encontradas.",
-    });
-}
+//Pick random objects from the items array
+const generateRandom = (size = 4) => {
+  //temporary array
+  let tempArray = [...items];
+  //initializes cardValues array
+  let cardValues = [];
+  //size should be double (4*4 matrix)/2 since pairs of objects would exist
+  size = (size * size) / 2;
+  //Random object selection
+  for (let i = 0; i < size; i++) {
+    const randomIndex = Math.floor(Math.random() * tempArray.length);
+    cardValues.push(tempArray[randomIndex]);
+    //once selected remove the object from temp array
+    tempArray.splice(randomIndex, 1);
+  }
+  return cardValues;
+};
 
-// Función Principal
-function voltear(id) {
-    if (temporizador == false) {
-        contarTiempo();
-        temporizador = true;
-    }
+const matrixGenerator = (cardValues, size = 4) => {
+  gameContainer.innerHTML = "";
+  cardValues = [...cardValues, ...cardValues];
+  //simple shuffle
+  cardValues.sort(() => Math.random() - 0.5);
+  for (let i = 0; i < size * size; i++) {
 
-    tarjetasVolteadas++;
-    console.log(tarjetasVolteadas);
-    if (tarjetasVolteadas == 1) {
-        // Mostrar primer número
-        tarjeta1 = document.getElementById(id);
-        primerResultado = numbers[id];
-        tarjeta1.innerHTML = `<img src="imgs/${primerResultado}.png">`;
-        clickAudio.play();
+    gameContainer.innerHTML += `
+     <div class="card-container" data-card-value="${cardValues[i].name}">
+        <div class="card-before">?</div>
+        <div class="card-after">
+        <img src="${cardValues[i].image}" class="image card-image"/></div>
+     </div>
+     `;
+  }
+  //Grid
+  gameContainer.style.gridTemplateColumns = `repeat(${size},auto)`;
 
-        // Deshabilitar primer botón
-        tarjeta1.classList.add("disabled");
-    } else if (tarjetasVolteadas == 2) {
-        // Mostrar segundo número
-        tarjeta2 = document.getElementById(id);
-        segundoResultado = numbers[id];
-        tarjeta2.innerHTML = `<img src="imgs/${segundoResultado}.png">`;
-
-        // Deshabilitar segundo botón
-        tarjeta2.classList.add("disabled");
-
-        // Incrementar movimientos
-        movimientos++;
-        movimientosEl.innerHTML = movimientos;
-        if (primerResultado === segundoResultado) {
-            // Encerar contador tarjetas destapadas
-            tarjetasVolteadas = 0;
-            rightAudio.play();
-
-            // Aumentar los aciertos
-            aciertos++;
-            aciertosEl.innerHTML = aciertos;
+  //Cards
+  cards = document.querySelectorAll(".card-container");
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      //If selected card is not matched yet then only run (i.e already matched card when clicked would be ignored)
+      if (!card.classList.contains("matched")) {
+        //flip the cliked card
+        card.classList.add("flipped");
+        //if it is the firstcard (!firstCard since firstCard is initially false)
+        if (!firstCard) {
+          //so current card will become firstCard
+          firstCard = card;
+          //current cards value becomes firstCardValue
+          firstCardValue = card.getAttribute("data-card-value");
         } else {
-            // Mostrar momentáneamente
-            wrongAudio.play();
-            setTimeout(() => {
-                tarjeta1.innerHTML = " ";
-                tarjeta2.innerHTML = " ";
-                tarjeta1.classList.remove("disabled");
-                tarjeta2.classList.remove("disabled");
-                tarjetasVolteadas = 0;
-            }, 800);
+          //increment moves since user selected second card
+          movesCounter();
+          //secondCard and value
+          secondCard = card;
+          let secondCardValue = card.getAttribute("data-card-value");
+          if (firstCardValue == secondCardValue) {
+            //if both cards match add matched class so these cards would beignored next time
+            firstCard.classList.add("matched");
+            secondCard.classList.add("matched");
+            //set firstCard to false since next card would be first now
+            firstCard = false;
+            //winCount increment as user found a correct match
+            winCount += 1;
+            //check if winCount ==half of cardValues
+            if (winCount == Math.floor(cardValues.length / 2)) {
+              result.innerHTML = `<h2>Felicidades, Ganaste!</h2>
+            <h4>Movimientos: ${movesCount}</h4>`;
+              stopGame();
+            }
+          } else {
+            //if the cards dont match
+            //flip the cards back to normal
+            let [tempFirst, tempSecond] = [firstCard, secondCard];
+            firstCard = false;
+            secondCard = false;
+            let delay = setTimeout(() => {
+              tempFirst.classList.remove("flipped");
+              tempSecond.classList.remove("flipped");
+            }, 900);
+          }
         }
-        if (aciertos == 8) {
-            clearInterval(tiempoRegresivoId);
-            aciertosEl.innerHTML = `${aciertos} 😱`;
-            tiempoEl.innerHTML = `Fantástico, solo te demoraste ${
-                tiempoInicial - tiempo
-            } segundos 🎉`;
-            movimientosEl.innerHTML = `${movimientos} 😎`;
-            Swal.fire({
-                icon: "success",
-                title: "¡Enhorabuena!",
-                text: "Haz ganado 🥳",
-            });
-            winAudio.play();
-            replayEl.classList.remove("hidden");
-        }
-    }
-}
+      }
+    });
+  });
+};
+
+//Start game
+startButton.addEventListener("click", () => {
+  movesCount = 0;
+  seconds = 0;
+  minutes = 0;
+  //controls amd buttons visibility
+  controls.classList.add("hide");
+  stopButton.classList.remove("hide");
+  startButton.classList.add("hide");
+  //Start timer
+  interval = setInterval(timeGenerator, 1000);
+  //initial moves
+  moves.innerHTML = `<span>Moves:</span> ${movesCount}`;
+  initializer();
+});
+
+//Stop game
+stopButton.addEventListener(
+  "click",
+  (stopGame = () => {
+    controls.classList.remove("hide");
+    stopButton.classList.add("hide");
+    startButton.classList.remove("hide");
+    clearInterval(interval);
+  })
+);
+
+//Initialize values and func calls
+const initializer = () => {
+  result.innerText = "";
+  winCount = 0;
+  let cardValues = generateRandom();
+  console.log(cardValues);
+  matrixGenerator(cardValues);
+};
