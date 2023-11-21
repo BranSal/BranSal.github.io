@@ -79,10 +79,10 @@ function calcResult(userOption, machineOption) {
     } else if (userOption === PIEDRA) {
         if (machineOption === PAPEL) return PERDIDOS;
         if (machineOption === TIJERAS) return GANADOS;
-    } else if (userOption === PAPEL) {  // Agrega esta verificación para PAPEL
+    } else if (userOption === PAPEL) {  // Se Agrega esta verificación para PAPEL
         if (machineOption === PIEDRA) return GANADOS;
         if (machineOption === TIJERAS) return PERDIDOS;
-    } else if (userOption === TIJERAS) {  // Agrega esta verificación para TIJERAS
+    } else if (userOption === TIJERAS) {  // Se Agrega esta verificación para TIJERAS
         if (machineOption === PIEDRA) return PERDIDOS;
         if (machineOption === PAPEL) return GANADOS;
     }
